@@ -126,7 +126,7 @@ export default class Category extends CatalogPage {
                 async: false,
                 url: `/api/storefront/carts/${cartID}`,
                 success: function (data) {
-                    alert(`deleted ${cartID}`)
+                    window.location = "/cart.php"
                 }
             })
         })
