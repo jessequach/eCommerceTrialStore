@@ -46,6 +46,91 @@ export default class Category extends CatalogPage {
         $('a.reset-btn').on('click', () => this.setLiveRegionsAttributes($('span.reset-message'), 'status', 'polite'));
 
         this.ariaNotifyNoProducts();
+
+        $('.card-figure').hover(
+            function () {
+                var image = $(this).find('.card-image');
+                var hoverSrcset = image.attr('data-hover-srcset');
+                var currentSrcset = image.attr('srcset');
+                if (hoverSrcset && hoverSrcset != '') image.attr('srcset', hoverSrcset);
+            }, function () {
+                var image = $(this).find('.card-image');
+                var originalSrcset = image.attr('data-srcset');
+                var currentSrcset = image.attr('srcset');
+                image.attr('srcset', originalSrcset);
+            }
+        );
+
+        $('#addAllToCart').click(function () {
+            const productsData = $(this).data('products').slice(0, -1)
+            products = productsData.split(",")
+            addMultipleToCart()
+        })
+
+        let products = []
+        let addMultipleToCart = function () {
+            if (products.length) {
+                for (let i = products.length - 1; i >= 0; i--) {
+                    $.ajax({
+                        type: 'GET',
+                        async: false,
+                        url: `/cart.php?action=add&product_id=${products[i]}`,
+                    })
+                }
+            }
+            window.location = "/cart.php"
+        }
+
+        let getCartQuantity = function () {
+            let total = 0
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: `/api/storefront/cart`,
+                success: function (data) {
+                    if (data.length !== 0){
+                        const physicalItems = data[0]['lineItems']['physicalItems']
+                        for (let i = physicalItems.length - 1; i >= 0; i--) {
+                            total += physicalItems[i].quantity
+                        }
+                    }
+                }
+            })
+            return total
+        }
+
+        $('#removeAllItems').val(getCartQuantity())
+        if ($('#removeAllItems').val() > 0) $('#removeAllItems').show();
+        else $('#removeAllItems').hide();
+
+        let getCartID = function () {
+            let cartID = ''
+            $.ajax({
+                type: 'GET',
+                async: false,
+                url: `/api/storefront/cart`,
+                success: function (data) {
+                    if (data.length !== 0){
+                        cartID = data[0]['id']
+                    }
+                }
+            })
+            return cartID
+        }
+
+        $('#removeAllItems').click(function () {
+            const cartID = getCartID()
+            if (!cartID) return
+            $.ajax({
+                type: 'DELETE',
+                async: false,
+                url: `/api/storefront/carts/${cartID}`,
+                success: function (data) {
+                    alert(`deleted ${cartID}`)
+                }
+            })
+        })
+
     }
 
     ariaNotifyNoProducts() {
