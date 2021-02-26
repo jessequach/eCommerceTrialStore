@@ -9,3 +9,19 @@
 .category-header-image {
     width: 100%;
 }
+
+.banner {
+    border-radius: 5px 5px 0 0; 
+    box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.15);
+    margin-bottom: 4vh; 
+    padding: 2vh 0 0 2vw;
+}
+
+.banner-text {
+    font-size: 1.2em;
+}
+
+.banner-text p:first-of-type {
+    font-size: 1.2em;
+    font-weight: bold;
+}
