@@ -55,6 +55,7 @@ Generate the srcset string using the default sizes defined in the helper. This w
 pick the best-sized image based on its own understanding of how it will render the page.
 --}}
 {{#unless lazyload '==' 'disabled'}}data-{{/unless}}srcset="{{getImageSrcset image use_default_sizes=true }}"
+data-hover-srcset="{{#replace '{:size}' images.1.data}}500x659{{/replace}}"
 {{else if default_image}}src="{{cdn default_image}}" alt="{{lang 'products.card_default_image_alt'}}"{{/if}}
 class="{{#unless lazyload '==' 'disabled'}}lazyload{{/unless}}{{#if class}} {{class}}{{/if}}"
 {{#if lazyload '==' 'lazyload'}}loading="lazy"{{/if}}
